@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import Alert from '@mui/material/Alert';
 
 import Input from '../Shared/Inputs/Input';
@@ -18,8 +18,10 @@ const MyForm = () : JSX.Element=> {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
+  const abortController = new AbortController();
+  
   const handleClick = () => {
-    getWeather({setWeatherData, setError, setLoading, inputValues}); 
+    getWeather({setWeatherData, setError, setLoading, inputValues, signal: abortController.signal}); 
   };
   
   
@@ -29,6 +31,12 @@ const MyForm = () : JSX.Element=> {
       [e.target.name]: e.target.value
     })
   }
+  
+  useEffect(() => {
+    return () => {
+      abortController.abort();
+    }
+  }, [inputValues])
   
   return (
     <MainContainerStyles>

@@ -2,6 +2,7 @@ interface ApiType {
   url: string;
   method?: "POST" | "GET";
   body?: any;
+  signal: AbortSignal;
 }
 
 interface RequestOptionWithHeadersType {
@@ -23,11 +24,12 @@ const API_KEYS = {
   }
 }
 
-const Api = async ({url, method, body}: ApiType) => {
+const Api = async ({url, method, body, signal}: ApiType) => {
   const requestOptions: RequestOptionWithHeadersType = {
     method: method || (body ? "POST" : "GET"),
     headers: {
       'Content-Type': 'application/json',
+      ...[signal && {['signal']: signal}]
     },
     body: JSON.stringify(body)
   };
@@ -40,7 +42,7 @@ const Api = async ({url, method, body}: ApiType) => {
       const data = await response.json();
       return data;
     } else {
-      const response = await fetch(fullUrl);     
+      const response = await fetch(fullUrl, ...[signal && {['signal']: signal}]);     
       const data = await response.json();
       return data;
     }

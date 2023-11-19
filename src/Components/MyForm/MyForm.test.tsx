@@ -53,7 +53,7 @@ describe('MyForm Component', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument();
     
     await waitFor(() => {
-      expect(screen.getByText(CARD_TITLE));
+      expect(screen.getByText(CARD_TITLE)).toBeInTheDocument();
       
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       expect(screen.getByText('Description: scattered clouds')).toBeInTheDocument();
@@ -78,6 +78,36 @@ describe('MyForm Component', () => {
     
     await waitFor(() => {
       expect(screen.getByText(DEFAULT_ERROR_MESSAGE)).toBeInTheDocument();
+    })
+  });
+  
+  it(`don't set data if component unmounted before api call fetches`, async () => {
+    (Api as jest.Mock).mockResolvedValue({
+      weather: [
+        {
+          description: 'scattered clouds'
+        }
+      ]
+    });
+    
+    const { unmount } = render(<MyForm />);
+    
+    const inputCountry =  screen.getByLabelText('Country');
+    const inputCity = screen.getByRole('textbox', {name: 'City'});
+    const getWeatherBtn = screen.getByRole('button', {name: BUTTON_NAME});
+    
+    userEvent.type(inputCountry, 'uk');
+    userEvent.type(inputCity, 'london');
+    
+    act(() => {
+      userEvent.click(getWeatherBtn);
+    })
+    
+    unmount();
+    
+    await waitFor(() => {
+      expect(screen.queryByText(CARD_TITLE)).not.toBeInTheDocument();
+      expect(screen.queryByText('Description: scattered clouds')).not.toBeInTheDocument();
     })
   });
 });

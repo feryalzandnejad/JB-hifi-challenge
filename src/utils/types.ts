@@ -12,7 +12,8 @@ export interface GetWeatherProps {
   inputValues: {
     city: string;
     country: string;
-  }
+  },
+  signal: AbortSignal;
 };
 
 export interface MyCardProps {
