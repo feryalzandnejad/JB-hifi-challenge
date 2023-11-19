@@ -1,8 +1,8 @@
 import { useState, ChangeEvent } from "react";
 import Alert from '@mui/material/Alert';
 
-import TextFields from '../Shared/Inputs/Input';
-import Buttons from '../Shared/Button/Button';
+import Input from '../Shared/Inputs/Input';
+import Button from '../Shared/Button/Button';
 import MyCard from '../MyCard/MyCard';
 
 import { getWeather } from './MyForm.helper';
@@ -10,40 +10,50 @@ import {MAIN_TITLE, BUTTON_NAME} from './MyForm.constant';
 import { MainContainerStyles, ButtonWrapperStyles } from './MyForm.styles';
 
 const MyForm = () : JSX.Element=> {
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
+  const [inputValues, setInputValues] = useState({
+    city: '',
+    country: '',
+  })
   const [weatherData, setWeatherData] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
   const handleClick = () => {
-    getWeather({city,country,setWeatherData, setError, setLoading}); 
+    getWeather({setWeatherData, setError, setLoading, inputValues}); 
   };
   
-  const handleCityChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCity(e.target.value);
-  };
   
-  const handleCountryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCountry(e.target.value);
-  };
+  const handleInputValues = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValues({
+      ...inputValues,
+      [e.target.name]: e.target.value
+    })
+  }
   
   return (
     <MainContainerStyles>
       <h1>{MAIN_TITLE}</h1>
-      <TextFields label={'Country'} onChange={handleCountryChange} value={country}/>
-      <TextFields label={'City'} onChange={handleCityChange} value={city}/>
+      
+      <Input 
+        label='Country'
+        onChange={handleInputValues}
+        value={inputValues.country} 
+        name='country'/>
+      <Input 
+        label='City' 
+        onChange={handleInputValues} 
+        value={inputValues.city} 
+        name='city'/>
       
       <ButtonWrapperStyles> 
-        <Buttons onClick={handleClick} disabled={loading}>{BUTTON_NAME}</Buttons>
+        <Button onClick={handleClick} disabled={loading}>{BUTTON_NAME}</Button>
       </ButtonWrapperStyles> 
       
-      {weatherData ?  <MyCard description={weatherData} /> : null}
+      {weatherData ? <MyCard description={weatherData} /> : null}
       
-      {loading ? <div>Loading....</div> : null} 
+      {loading ? <div>Loading...</div> : null} 
       
-      
-      {error ? <Alert severity="error"> {error} </Alert> : null}
+      {error ? <Alert severity="error">{error}</Alert> : null}
         
     </MainContainerStyles>
   )

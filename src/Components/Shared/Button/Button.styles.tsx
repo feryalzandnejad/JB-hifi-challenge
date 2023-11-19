@@ -6,6 +6,7 @@ export const ButtonStyles = styled(Button)`
   background-color: #fdec12;
   color: #000000;
   font-weight: bold;
+  
   &:hover {
     background-color:#000000;
     color: #fdec12;

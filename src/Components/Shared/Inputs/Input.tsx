@@ -2,9 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-import {TextFiledProps} from '../../../utils/types';
+import {InputProps} from '../../../utils/types';
 
-const TextFields = ({label, onChange, value}:TextFiledProps) => {
+const Input = ({label, onChange, value, name}: InputProps) => {
 
   return (
     <Box
@@ -16,13 +16,13 @@ const TextFields = ({label, onChange, value}:TextFiledProps) => {
       autoComplete="off"
     >
       <TextField
-        id="outlined-uncontrolled"
         label={label}
         onChange={onChange}
         value={value}
+        name={name}
       />
     </Box>
   );
 };
 
-export default TextFields;
+export default Input;

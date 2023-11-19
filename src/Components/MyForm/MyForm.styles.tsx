@@ -8,7 +8,6 @@ export const MainContainerStyles = styled.div`
   top: 50%;
   text-align: center;
   overflow: hidden;
-  
 `;
 
 export const ButtonWrapperStyles = styled.div`
